@@ -20,7 +20,7 @@ const CONFIG = {
   blog: {
     title: "r-a-y-l-o-g",
     description: "welcome to raylog!",
-    scheme: "dark", // 'light' | 'dark' | 'system'
+    scheme: "light", // 'light' | 'dark' | 'system'
   },
 
   // CONFIG configration (required)
