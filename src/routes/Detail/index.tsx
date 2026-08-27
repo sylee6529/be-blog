@@ -2,6 +2,7 @@ import useMermaidEffect from "./hooks/useMermaidEffect"
 import PostDetail from "./PostDetail"
 import PageDetail from "./PageDetail"
 import styled from "@emotion/styled"
+import { tokens } from "src/styles"
 import usePostQuery from "src/hooks/usePostQuery"
 
 type Props = {}
@@ -30,6 +31,6 @@ const StyledWrapper = styled.div`
   /** Reference: https://github.com/chriskempson/tomorrow-theme **/
   code[class*="language-mermaid"],
   pre[class*="language-mermaid"] {
-    background-color: ${({ theme }) => theme.colors.gray5};
+    background-color: ${tokens.color.placeholder};
   }
 `
