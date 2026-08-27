@@ -8,14 +8,15 @@ import useScheme from "src/hooks/useScheme"
 import "react-notion-x/src/styles.css"
 
 // used for code syntax highlighting (optional)
-import "prismjs/themes/prism-tomorrow.css"
+import "prismjs/themes/prism.css"
 
 // used for rendering equations (optional)
 
 import "katex/dist/katex.min.css"
-import { FC } from "react"
+import { FC, useEffect, useRef } from "react"
 import styled from "@emotion/styled"
-import { tokens } from "src/styles"
+import Prism from "src/libs/prism"
+import { articleStyles } from "./articleStyles"
 
 const _NotionRenderer = dynamic(
   () => import("react-notion-x").then((m) => m.NotionRenderer),
@@ -57,8 +58,49 @@ type Props = {
 
 const NotionRenderer: FC<Props> = ({ recordMap }) => {
   const [scheme] = useScheme()
+  const wrapperRef = useRef<HTMLDivElement>(null)
+
+  // kciter 의 코드블록 헤더바는 content: attr(data-language) 로 언어명을 찍는다.
+  // react-notion-x 는 language-xxx 클래스만 달아주므로 여기서 옮겨 담는다.
+  // 본문이 ssr:false 로 나중에 그려지기 때문에 붙는 시점을 관찰해야 한다.
+  useEffect(() => {
+    const wrapper = wrapperRef.current
+    if (!wrapper) return
+
+    const label = () => {
+      const fresh = wrapper.querySelectorAll<HTMLElement>(
+        "pre.notion-code:not([data-language])"
+      )
+      if (!fresh.length) return
+
+      fresh.forEach((el) => {
+        const language = [...el.classList]
+          .find((c) => c.startsWith("language-"))
+          ?.replace("language-", "")
+        el.dataset.language = language || "code"
+      })
+
+      /*
+       * react-notion-x 는 자체 node_modules 에 prismjs 사본을 두고 있어서
+       * 우리가 문법을 등록한 인스턴스와 실제로 하이라이팅하는 인스턴스가 다르다.
+       * 나중에 로드된 쪽이 window.Prism 을 덮으므로, 그쪽에 문법을 옮겨 심고
+       * 같은 인스턴스로 하이라이팅한다.
+       */
+      const active = (window as unknown as { Prism?: typeof Prism }).Prism
+      if (active && active !== Prism) {
+        Object.assign(active.languages, Prism.languages)
+      }
+      ;(active ?? Prism).highlightAllUnder(wrapper)
+    }
+
+    label()
+    const observer = new MutationObserver(label)
+    observer.observe(wrapper, { childList: true, subtree: true })
+    return () => observer.disconnect()
+  }, [recordMap])
+
   return (
-    <StyledWrapper>
+    <StyledWrapper ref={wrapperRef}>
       <_NotionRenderer
         darkMode={scheme === "dark"}
         recordMap={recordMap}
@@ -80,29 +122,5 @@ const NotionRenderer: FC<Props> = ({ recordMap }) => {
 export default NotionRenderer
 
 const StyledWrapper = styled.div`
-  /* react-notion-x 기본 폭/여백을 715px 컨테이너에 맞춘다 */
-  --notion-max-width: 100%;
-
-  /* // TODO: why render? */
-  .notion-collection-page-properties {
-    display: none !important;
-  }
-  .notion-page {
-    width: 100%;
-    padding: 0;
-  }
-  .notion-page-content > :first-child {
-    margin-top: 0;
-  }
-  .notion-list {
-    width: 100%;
-  }
-  .notion-h1,
-  .notion-h2,
-  .notion-h3 {
-    color: ${tokens.color.text};
-  }
-  .notion-link {
-    color: ${tokens.color.accent};
-  }
+  ${articleStyles}
 `
