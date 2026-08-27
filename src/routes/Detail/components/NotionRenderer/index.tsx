@@ -15,6 +15,7 @@ import "prismjs/themes/prism-tomorrow.css"
 import "katex/dist/katex.min.css"
 import { FC } from "react"
 import styled from "@emotion/styled"
+import { tokens } from "src/styles"
 
 const _NotionRenderer = dynamic(
   () => import("react-notion-x").then((m) => m.NotionRenderer),
@@ -79,14 +80,29 @@ const NotionRenderer: FC<Props> = ({ recordMap }) => {
 export default NotionRenderer
 
 const StyledWrapper = styled.div`
+  /* react-notion-x 기본 폭/여백을 715px 컨테이너에 맞춘다 */
+  --notion-max-width: 100%;
+
   /* // TODO: why render? */
   .notion-collection-page-properties {
     display: none !important;
   }
   .notion-page {
+    width: 100%;
     padding: 0;
+  }
+  .notion-page-content > :first-child {
+    margin-top: 0;
   }
   .notion-list {
     width: 100%;
+  }
+  .notion-h1,
+  .notion-h2,
+  .notion-h3 {
+    color: ${tokens.color.text};
+  }
+  .notion-link {
+    color: ${tokens.color.accent};
   }
 `

@@ -3,6 +3,7 @@ import { ThemeProvider } from "./ThemeProvider"
 import useScheme from "src/hooks/useScheme"
 import Header from "./Header"
 import styled from "@emotion/styled"
+import { tokens } from "src/styles"
 import Scripts from "src/layouts/RootLayout/Scripts"
 import useGtagEffect from "./useGtagEffect"
 import Prism from "prismjs/prism"
@@ -56,17 +57,22 @@ const RootLayout = ({ children }: Props) => {
       <Scripts />
       {/* // TODO: replace react query */}
       {/* {metaConfig.type !== "Paper" && <Header />} */}
-      <Header fullWidth={false} />
-      <StyledMain>{children}</StyledMain>
+      <StyledContainer>
+        <Header />
+        <main>{children}</main>
+      </StyledContainer>
     </ThemeProvider>
   )
 }
 
 export default RootLayout
 
-const StyledMain = styled.main`
+const StyledContainer = styled.div`
   margin: 0 auto;
-  width: 100%;
-  max-width: 1120px;
-  padding: 0 1rem;
+  width: ${tokens.contentWidth}px;
+  padding-top: 1rem;
+
+  @media (max-width: 768px) {
+    width: 90vw;
+  }
 `
