@@ -1,6 +1,6 @@
 import { CONFIG } from "site.config"
 import { NotionAPI } from "notion-client"
-import { idToUuid } from "notion-utils"
+import { getBlockValue, idToUuid } from "notion-utils"
 
 import getAllPageIds from "src/libs/utils/notion/getAllPageIds"
 import getPageProperties from "src/libs/utils/notion/getPageProperties"
@@ -17,16 +17,17 @@ export const getPosts = async () => {
 
   const response = await api.getPage(id)
   id = idToUuid(id)
-  const collection = Object.values(response.collection)[0]?.value
+  const collection = getBlockValue(Object.values(response.collection)[0])
   const block = response.block
   const schema = collection?.schema
 
-  const rawMetadata = block[id].value
+  const rawMetadata = getBlockValue(block[id])
 
   // Check Type
   if (
-    rawMetadata?.type !== "collection_view_page" &&
-    rawMetadata?.type !== "collection_view"
+    !schema ||
+    (rawMetadata?.type !== "collection_view_page" &&
+      rawMetadata?.type !== "collection_view")
   ) {
     return []
   } else {
@@ -35,13 +36,13 @@ export const getPosts = async () => {
     const data = []
     for (let i = 0; i < pageIds.length; i++) {
       const id = pageIds[i]
+      const blockValue = getBlockValue(block[id])
+      if (!blockValue) continue
       const properties = (await getPageProperties(id, block, schema)) || null
       // Add fullwidth, createdtime to properties
-      properties.createdTime = new Date(
-        block[id].value?.created_time
-      ).toString()
+      properties.createdTime = new Date(blockValue.created_time).toString()
       properties.fullWidth =
-        (block[id].value?.format as any)?.page_full_width ?? false
+        (blockValue.format as any)?.page_full_width ?? false
 
       data.push(properties)
     }
