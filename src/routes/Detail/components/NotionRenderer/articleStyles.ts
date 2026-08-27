@@ -27,6 +27,21 @@ export const articleStyles = css`
     margin-top: 0;
   }
 
+  /*
+   * react-notion-x 는 블록마다 padding: 3px 0 을 붙인다. 패딩은 마진과 달리
+   * 겹치지 않아 블록이 많은 글일수록 그대로 쌓인다. 좌우 패딩은 살리고
+   * 세로만 걷어낸다.
+   */
+  .notion-text,
+  .notion-list,
+  .notion-h1,
+  .notion-h2,
+  .notion-h3,
+  .notion-quote {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
   /* 제목: h1, h2 는 아래 경계선을 깐다 */
   .notion-h1,
   .notion-h2,
@@ -78,10 +93,19 @@ export const articleStyles = css`
     line-height: 1.8;
     word-break: break-all;
   }
-  .notion-list + .notion-list {
+  /*
+   * 단순 불렛끼리는 붙이고, 아래에 설명을 달고 있는 불렛 다음에는
+   * 한 덩어리씩 끊어 읽히도록 간격을 남긴다.
+   */
+  /* li 마다 붙는 padding 6px 0 은 kciter 에 없는 값이라 불렛마다 12px 씩 쌓인다 */
+  .notion-list li {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .notion-list:not(:has(.notion-list)) + .notion-list {
     margin-top: 0;
   }
-  .notion-list:has(+ .notion-list) {
+  .notion-list:not(:has(.notion-list)):has(+ .notion-list) {
     margin-bottom: 0;
   }
   .notion-list-disc {
@@ -101,6 +125,11 @@ export const articleStyles = css`
     margin-bottom: 0;
     padding-left: 12px;
     list-style-position: outside;
+  }
+  /* 불렛에 딸린 설명은 새 문단이 아니라 이어지는 내용이라 바짝 붙인다 */
+  .notion-list .notion-list > .notion-text {
+    margin-top: 4px;
+    margin-bottom: 0;
   }
 
   /* 인용 */
