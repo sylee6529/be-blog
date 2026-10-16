@@ -1,3 +1,2 @@
 export * from './pretendard'
-export * from './roboto'
-export * from './google'
+export * from './latin'
