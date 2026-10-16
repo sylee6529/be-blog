@@ -1,41 +1,25 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { getCookie, setCookie } from "cookies-next"
-import { useEffect } from "react"
-import { CONFIG } from "site.config"
 import { queryKey } from "src/constants/queryKey"
 import { SchemeType } from "src/types"
 
 type SetScheme = (scheme: SchemeType) => void
 
+/**
+ * kciter.so 를 따라 라이트 전용으로 고정한다.
+ * react-notion-x 등 scheme 을 받는 쪽이 있어 훅 자체는 남겨둔다.
+ */
 const useScheme = (): [SchemeType, SetScheme] => {
   const queryClient = useQueryClient()
-  const followsSystemTheme = CONFIG.blog.scheme === "system"
 
   const { data } = useQuery({
     queryKey: queryKey.scheme(),
     enabled: false,
-    initialData: followsSystemTheme
-      ? "dark"
-      : (CONFIG.blog.scheme as SchemeType),
+    initialData: "light" as SchemeType,
   })
 
-  const setScheme = (scheme: SchemeType) => {
-    setCookie("scheme", scheme)
-
-    queryClient.setQueryData(queryKey.scheme(), scheme)
+  const setScheme = () => {
+    queryClient.setQueryData(queryKey.scheme(), "light")
   }
-
-  useEffect(() => {
-    if (!window) return
-
-    const cachedScheme = getCookie("scheme") as SchemeType
-    const defaultScheme = followsSystemTheme
-      ? window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light"
-      : data
-    setScheme(cachedScheme || defaultScheme)
-  }, [])
 
   return [data, setScheme]
 }

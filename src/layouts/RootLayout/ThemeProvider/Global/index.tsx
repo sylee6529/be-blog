@@ -1,27 +1,35 @@
-import { Global as _Global, css, useTheme } from "@emotion/react"
+import { Global as _Global, css } from "@emotion/react"
 
 import { ThemeProvider as _ThemeProvider } from "@emotion/react"
-import { pretendard } from "src/assets"
+import { pretendard, quattrocentoSans, sourceCodePro } from "src/assets"
+import { tokens } from "src/styles"
 
 export const Global = () => {
-  const theme = useTheme()
-
   return (
     <_Global
       styles={css`
         body {
           margin: 0;
           padding: 0;
-          color: ${theme.colors.gray12};
-          background-color: ${theme.colors.gray2};
-          font-family: ${pretendard.style.fontFamily};
-          font-weight: ${pretendard.style.fontWeight};
-          font-style: ${pretendard.style.fontStyle};
+          color: ${tokens.color.text};
+          background-color: ${tokens.color.page};
+          font-family: ${quattrocentoSans.style.fontFamily},
+            ${pretendard.style.fontFamily}, sans-serif;
+          font-weight: 400;
+          font-style: normal;
+          -webkit-font-smoothing: antialiased;
         }
 
         * {
-          color-scheme: ${theme.scheme};
+          color-scheme: light;
           box-sizing: border-box;
+        }
+
+        code,
+        pre,
+        kbd,
+        samp {
+          font-family: ${sourceCodePro.style.fontFamily}, monospace;
         }
 
         h1,
@@ -33,6 +41,7 @@ export const Global = () => {
           margin: 0;
           font-weight: inherit;
           font-style: inherit;
+          color: ${tokens.color.text};
         }
 
         a {
@@ -71,7 +80,7 @@ export const Global = () => {
           width: 100%;
           border: none;
           margin: 0;
-          border-top: 1px solid ${theme.colors.gray6};
+          border-top: 1px solid ${tokens.color.border};
         }
       `}
     />

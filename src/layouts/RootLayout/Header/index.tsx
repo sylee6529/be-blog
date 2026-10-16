@@ -1,56 +1,55 @@
-import NavBar from "./NavBar"
-import Logo from "./Logo"
-import ThemeToggle from "./ThemeToggle"
+import Link from "next/link"
 import styled from "@emotion/styled"
+import { CONFIG } from "site.config"
 import { zIndexes } from "src/styles/zIndexes"
+import { tokens } from "src/styles"
+import NavBar from "./NavBar"
 
-type Props = {
-  fullWidth: boolean
-}
-
-const Header: React.FC<Props> = ({ fullWidth }) => {
+const Header: React.FC = () => {
   return (
     <StyledWrapper>
-      <div data-full-width={fullWidth} className="container">
-        <Logo />
-        <div className="nav">
-          <ThemeToggle />
-          <NavBar />
-        </div>
-      </div>
+      <Link className="brand" href="/" aria-label={CONFIG.blog.title}>
+        <span className="brand-name">{CONFIG.blog.title}</span>
+        <span className="brand-divider">|</span>
+        <span className="brand-tagline">devlog</span>
+      </Link>
+      <NavBar />
     </StyledWrapper>
   )
 }
 
 export default Header
 
-const StyledWrapper = styled.div`
+const StyledWrapper = styled.header`
+  position: relative;
   z-index: ${zIndexes.header};
-  position: sticky;
-  top: 0;
-  background-color: ${({ theme }) => theme.colors.gray2};
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0 -1rem 2.5rem;
+  padding: 0.625rem 1rem;
+  border-radius: ${tokens.radius.card};
+  background-color: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(6px);
 
-  .container {
+  .brand {
     display: flex;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    max-width: 1120px;
-    height: 3rem;
-    margin: 0 auto;
-    &[data-full-width="true"] {
-      @media (min-width: 768px) {
-        padding-left: 6rem;
-        padding-right: 6rem;
-      }
+    align-items: baseline;
+    gap: 0.4rem;
+    flex-shrink: 0;
+
+    .brand-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: ${tokens.color.text};
     }
-    .nav {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
+    .brand-divider {
+      color: ${tokens.color.border};
+    }
+    .brand-tagline {
+      font-size: 0.85rem;
+      color: ${tokens.color.muted};
     }
   }
 `

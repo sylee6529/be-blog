@@ -1,4 +1,5 @@
 import styled from "@emotion/styled"
+import { tokens } from "src/styles"
 import { useRouter } from "next/router"
 import React from "react"
 
@@ -22,15 +23,20 @@ const Tag: React.FC<Props> = ({ children }) => {
 export default Tag
 
 const StyledWrapper = styled.div`
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-  border-radius: 50px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.7rem;
+  border: 1px solid ${tokens.color.borderStrong};
+  border-radius: ${tokens.radius.pill};
   font-size: 0.75rem;
   line-height: 1rem;
-  font-weight: 400;
-  color: ${({ theme }) => theme.colors.gray10};
-  background-color: ${({ theme }) => theme.colors.gray5};
+  color: ${tokens.color.muted};
+  background-color: ${tokens.color.card};
   cursor: pointer;
+  transition: ${tokens.transition}, color 0.2s;
+
+  &:hover {
+    border-color: ${tokens.color.borderHover};
+    color: ${tokens.color.text};
+  }
 `

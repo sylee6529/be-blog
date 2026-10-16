@@ -1,4 +1,5 @@
 import styled from "@emotion/styled"
+import { tokens } from "src/styles"
 import { useRouter } from "next/router"
 import React from "react"
 
@@ -22,13 +23,13 @@ const StyledWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   font-weight: 500;
-  color: ${({ theme }) => theme.colors.gray10};
+  color: ${tokens.color.meta};
   a {
     margin-top: 0.5rem;
     cursor: pointer;
 
     :hover {
-      color: ${({ theme }) => theme.colors.gray12};
+      color: ${tokens.color.accent};
     }
   }
 `

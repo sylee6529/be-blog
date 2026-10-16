@@ -1,11 +1,11 @@
 import Link from "next/link"
 import { CONFIG } from "site.config"
 import { formatDate } from "src/libs/utils"
-import Tag from "../../../components/Tag"
-import { TPost } from "../../../types"
-import Image from "next/image"
-import Category from "../../../components/Category"
+import Tag from "src/components/Tag"
+import { TPost } from "src/types"
+import { tokens } from "src/styles"
 import styled from "@emotion/styled"
+import Thumbnail from "../Bento/Thumbnail"
 
 type Props = {
   data: TPost
@@ -16,45 +16,24 @@ const PostCard: React.FC<Props> = ({ data }) => {
 
   return (
     <StyledWrapper href={`/${data.slug}`}>
-      <article>
-        {category && (
-          <div className="category">
-            <Category>{category}</Category>
-          </div>
-        )}
-        {data.thumbnail && (
-          <div className="thumbnail">
-            <Image
-              src={data.thumbnail}
-              fill
-              alt={data.title}
-              css={{ objectFit: "cover" }}
-            />
-          </div>
-        )}
-        <div data-thumb={!!data.thumbnail} data-category={!!category} className="content">
-          <header className="top">
-            <h2>{data.title}</h2>
-          </header>
-          <div className="date">
-            <div className="content">
-              {formatDate(
-                data?.date?.start_date || data.createdTime,
-                CONFIG.lang
-              )}
-            </div>
-          </div>
-          <div className="summary">
-            <p>{data.summary}</p>
-          </div>
-          <div className="tags">
-            {data.tags &&
-              data.tags.map((tag: string, idx: number) => (
-                <Tag key={idx}>{tag}</Tag>
-              ))}
-          </div>
+      <Thumbnail className="thumb" src={data.thumbnail} alt={data.title} />
+      <div className="body">
+        <div className="head">
+          {category && <span className="category">{category}</span>}
+          <span className="date">
+            {formatDate(data?.date?.start_date || data.createdTime, CONFIG.lang)}
+          </span>
         </div>
-      </article>
+        <h2 className="title">{data.title}</h2>
+        {data.summary && <p className="summary">{data.summary}</p>}
+        {data.tags && data.tags.length > 0 && (
+          <div className="tags">
+            {data.tags.map((tag: string) => (
+              <Tag key={tag}>{tag}</Tag>
+            ))}
+          </div>
+        )}
+      </div>
     </StyledWrapper>
   )
 }
@@ -62,104 +41,79 @@ const PostCard: React.FC<Props> = ({ data }) => {
 export default PostCard
 
 const StyledWrapper = styled(Link)`
-  article {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 16px;
+  margin-bottom: 12px;
+  padding: 12px;
+  border-radius: ${tokens.radius.card};
+  background: ${tokens.color.card};
+  border: 1px solid ${tokens.color.border};
+  transition: ${tokens.transition};
+
+  &:hover {
+    border-color: ${tokens.color.borderHover};
+    box-shadow: ${tokens.shadow.card};
+  }
+  &:hover .title {
+    color: ${tokens.color.accent};
+    transition: color 0.2s;
+  }
+
+  > .thumb {
+    border-radius: 8px;
     overflow: hidden;
-    position: relative;
-    margin-bottom: 1.5rem;
-    border-radius: 1rem;
-    background-color: ${({ theme }) =>
-      theme.scheme === "light" ? "white" : theme.colors.gray4};
-    transition-property: box-shadow;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 300ms;
+  }
 
-    @media (min-width: 768px) {
-      margin-bottom: 2rem;
-    }
+  > .body {
+    min-width: 0;
 
-    :hover {
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    }
-    > .category {
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
-      z-index: 10;
-    }
+    > .head {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 6px;
+      font-size: 0.75rem;
+      color: ${tokens.color.meta};
 
-    > .thumbnail {
-      position: relative;
-      width: 100%;
-      background-color: ${({ theme }) => theme.colors.gray2};
-      padding-bottom: 66%;
-
-      @media (min-width: 1024px) {
-        padding-bottom: 50%;
+      .category {
+        color: ${tokens.color.accent};
+        font-weight: 700;
+        letter-spacing: 0.5px;
       }
     }
-    > .content {
-      padding: 1rem;
 
-      &[data-thumb="false"] {
-        padding-top: 3.5rem;
-      }
-      &[data-category="false"] {
-        padding-top: 1.5rem;
-      }
-      > .top {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-
-        @media (min-width: 768px) {
-          flex-direction: row;
-          align-items: baseline;
-        }
-        h2 {
-          margin-bottom: 0.5rem;
-          font-size: 1.125rem;
-          line-height: 1.75rem;
-          font-weight: 500;
-
-          cursor: pointer;
-
-          @media (min-width: 768px) {
-            font-size: 1.25rem;
-            line-height: 1.75rem;
-          }
-        }
-      }
-      > .date {
-        display: flex;
-        margin-bottom: 1rem;
-        gap: 0.5rem;
-        align-items: center;
-        .content {
-          font-size: 0.875rem;
-          line-height: 1.25rem;
-          color: ${({ theme }) => theme.colors.gray10};
-          @media (min-width: 768px) {
-            margin-left: 0;
-          }
-        }
-      }
-      > .summary {
-        margin-bottom: 1rem;
-        p {
-          display: none;
-          line-height: 2rem;
-          color: ${({ theme }) => theme.colors.gray11};
-
-          @media (min-width: 768px) {
-            display: block;
-          }
-        }
-      }
-      > .tags {
-        display: flex;
-        gap: 0.5rem;
-      }
+    > .title {
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 6px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
+
+    > .summary {
+      margin: 0 0 8px;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: ${tokens.color.body};
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    > .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 100px 1fr;
+    gap: 12px;
   }
 `
