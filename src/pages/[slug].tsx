@@ -17,9 +17,14 @@ const filter: FilterPostsOptions = {
   acceptType: ["Paper", "Post", "Page"],
 }
 
+// 코드로 만든 페이지와 같은 slug 의 Notion 글은 경로를 만들지 않는다. 겹치면 빌드가 멈춘다.
+const STATIC_PAGE_SLUGS = ["about"]
+
 export const getStaticPaths = async () => {
   const posts = await getPosts()
-  const filteredPost = filterPosts(posts, filter)
+  const filteredPost = filterPosts(posts, filter).filter(
+    (row) => !STATIC_PAGE_SLUGS.includes(row.slug)
+  )
 
   return {
     paths: filteredPost.map((row) => `/${row.slug}`),
