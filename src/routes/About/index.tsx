@@ -6,6 +6,7 @@ import { CONFIG } from "site.config"
 import { paletteVars, tokens } from "src/styles"
 import SectionRow from "./SectionRow"
 import { about, Highlight, Service, TimelineItem, Work } from "./data"
+import Lightbox from "./Lightbox"
 import Rich from "./Rich"
 import { KpiRow, VisualBlock } from "./Visuals"
 
@@ -184,16 +185,8 @@ const ServiceBlock: React.FC<{ service: Service }> = ({ service }) => (
         </p>
         {service.scale && <KpiRow kpis={service.scale} />}
       </div>
-      {service.image && service.links?.[0] && (
-        <a
-          className="service-shot"
-          href={service.links[0].href}
-          target="_blank"
-          rel="noreferrer"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={service.image.src} alt={service.image.alt} loading="lazy" />
-        </a>
+      {service.image && (
+        <Lightbox src={service.image.src} alt={service.image.alt} title={service.name} />
       )}
     </div>
     {service.visuals?.map((visual) => (
@@ -472,29 +465,6 @@ const StyledWrapper = styled.div`
   .service-top.has-image .service-main > ul {
     margin-top: auto;
   }
-  .service-shot {
-    display: block;
-    height: 100%;
-    min-height: 150px;
-    overflow: hidden;
-    border: 1px solid ${tokens.color.border};
-    border-radius: 10px;
-    img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: left center;
-      transition: transform 0.4s;
-    }
-    &:hover {
-      opacity: 1;
-      img {
-        transform: scale(1.04);
-      }
-    }
-  }
-
   .card {
     margin-top: 16px;
     padding: 22px 24px 20px;
@@ -693,13 +663,6 @@ const StyledWrapper = styled.div`
     .service-top.has-image {
       grid-template-columns: 1fr;
       gap: 12px;
-    }
-    .service-shot {
-      height: auto;
-      img {
-        height: auto;
-        aspect-ratio: 16 / 9;
-      }
     }
     .card {
       padding: 18px 16px 16px;

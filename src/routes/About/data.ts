@@ -116,8 +116,8 @@ export const about = {
           role: "학습, 결제, 알림 백엔드 API를 설계하고 운영합니다. 결제 연동, 랜딩 페이지, 관리자 시스템도 개발했습니다.",
           links: [{ label: "리드AI 사이트 열기", href: "https://readai.kr/", kind: "site" }],
           image: {
-            src: "/about/readai-landing.jpg",
-            alt: "리드AI 랜딩 페이지. 눈으로 읽고 데이터로 진단하는 문해력 서비스라는 문구와 도입 학원 수가 보입니다.",
+            src: "/about/readai-rocat.jpg",
+            alt: "리드AI의 RoCAT 진단 화면. 학생별 진단 결과, 진단 권장 학생, 남은 진단 수가 보입니다. 학생 이름은 가렸습니다.",
           },
           scale: [
             { value: "300개", label: "도입 학원" },
@@ -291,6 +291,10 @@ export const about = {
               href: "https://www.chosun.com/national/education/2026/03/12/2GR72HQVXJFY7EPKRG5QFSIXF4/",
             },
           ],
+          image: {
+            src: "/about/contest-dashboard.jpg",
+            alt: "전국 문해력 경진대회 기관 화면. 보유 응시권, 대회 일정, 응시생별 응시 현황이 보입니다. 학생 이름은 가렸습니다.",
+          },
           highlights: [
             {
               title: "평소 **10배** 동시 요청을 중단 없이 처리, 유료 전환율 **12% → 19%**",
@@ -343,6 +347,10 @@ export const about = {
             "시선 패턴으로 읽기 과정과 문해력을 진단하는 **공교육용 서비스**입니다. 멕시코와 인도 등 해외 학교에서도 씁니다.",
           role: "학생과 교사 화면, 백엔드 API, 운영 기능을 개발하고 유지보수했습니다.",
           links: [{ label: "리드포스쿨 사이트 열기", href: "https://www.readfor.school/ko", kind: "site" }],
+          image: {
+            src: "/about/readforschool-result.jpg",
+            alt: "리드포스쿨 교사용 과제 결과 화면. 학생별 과제 현황과 읽기 유창성, 이해도 같은 AI 과제 평가가 보입니다. 학생 이름은 가렸습니다.",
+          },
           scale: [
             { value: "650개", label: "도입 학교와 기관" },
             { value: "8개", label: "지원 언어" },
@@ -403,8 +411,13 @@ export const about = {
         {
           name: "Seeso Web SDK",
           period: "2024.11 ~ 2024.12",
-          description: "외부 개발사에 제공하는 **웹용 시선 추적 SDK**입니다.",
+          description: "외부 개발사에 제공하는 **웹용 시선 추적 SDK**입니다. 지금 이름은 Eyedid SDK입니다.",
           role: "JavaScript SDK를 TypeScript로 옮기고 프레임 처리 성능을 개선했습니다.",
+          links: [{ label: "SDK 문서 열기", href: "https://docs.eyedid.ai/", kind: "site" }],
+          image: {
+            src: "/about/sdk-docs.jpg",
+            alt: "Eyedid SDK 문서 사이트 첫 화면. 노트북, 모니터, 태블릿, 휴대폰에서 쓰는 멀티 플랫폼 시선 추적 SDK라는 소개가 보입니다.",
+          },
           highlights: [
             {
               title: "불필요한 변환 단계를 없애 프레임 처리 속도 **4배**",
